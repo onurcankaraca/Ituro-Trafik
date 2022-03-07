@@ -19,10 +19,10 @@ B22=park.find(B2)
 
 if onur >=0:
     if A11>=0:
-        print("A1 bulduuuuum")
+        print("find A1 ")
     elif A22>=0:
-        print("A2 bulduuuuum")
+        print("find A2")
     elif B11>=0:
-        print("B1 bulduuuuum")
+        print("find B1")
     elif B22>=0:
-        print("B2 bulduuuuum")
+        print("find B2")

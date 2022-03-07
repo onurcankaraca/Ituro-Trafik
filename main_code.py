@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 #import RPi.GPIO as GPIO
 import time
-#p sol tekerin motoru q sağ tekerin motoru
+
 """
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(16,GPIO.OUT)
@@ -121,8 +121,8 @@ resize=cv2.resize(frame,(512,512))
 #-------------------------------------------------------------------
 #şerit
 
-lower_black = np.array([0, 0, 0], np.uint8) #siyah1
-upper_black = np.array([180, 255, 80], np.uint8) #siyah1
+lower_black = np.array([0, 0, 0], np.uint8)
+upper_black = np.array([180, 255, 80], np.uint8) 
 
 mask_serit = cv2.inRange(hsv, lower_black, upper_black)
 mask_serit=cv2.resize(mask_serit,(512,512))
@@ -147,47 +147,46 @@ sag_rfr=462
 #-------------------------------------------------------------------
 #tabela
 
-lower_red = np.array([0,50,50], np.uint(8)) #kırmızı1
-upper_red = np.array([10,255,255], np.uint(8)) #kırmızı1
+lower_red = np.array([0,50,50], np.uint(8)) 
+upper_red = np.array([10,255,255], np.uint(8)) 
 mask1 = cv2.inRange(hsv, lower_red, upper_red)
 
 
-lower_red = np.array([170,50,50]) #kırmızı2
-upper_red = np.array([180,255,255]) #kırmızı2
+lower_red = np.array([170,50,50]) 
+upper_red = np.array([180,255,255])
 mask2 = cv2.inRange(hsv, lower_red, upper_red)
 
 mask_tabela_kırmızı = mask1 + mask2
-#kontur çiz. içinde daire bul. daha sonra en büyüğünü seç. sonra bounding rect al
 
 x,y,w,h = cv2.boundingRect(mask_tabela_kırmızı)
-orta_nokta=frame[y:y+h, x:x+w] #kırmızı tabelanın orta noktasını bulacağımız için bgr formatında sadece kırmızı tabela alanı olan yeni bir frame oluşturdum.
+orta_nokta=frame[y:y+h, x:x+w] 
 roi_ok = frame[y:y+h, x:x+w]
 
-#roi alanının orta noktasında 5 tane pixelin kırmızı noktası kontrol edilecek.
-#yazı olup olmamasını bulacağız.
+
+
 
 
 orta_nokta_color = orta_nokta[int(w/2),int(h/2)]
 
 
-lower_black = np.array([0, 0, 0], np.uint8) #siyah2 kırmızı tabela içindeki siyah
-upper_black = np.array([180, 255, 80], np.uint8) #siyah2 kırmızı tabela içindeki siyah
+lower_black = np.array([0, 0, 0], np.uint8)
+upper_black = np.array([180, 255, 80], np.uint8) 
 
 mask_ok= cv2.inRange(roi_ok, lower_black, upper_black)
 bl = (0,0,0)
 wh = (255,255,255)
 
-#cv2.circle(mask_ok, (int(w*0.5),int(h*0.375)), 1, wh, 2)
+
 
 sag_beyaz = 0
 sol_beyaz = 0
 
-for carpan in range(1,int(w*0.375)): #sağdaki beyaz noktaların sayısı
+for carpan in range(1,int(w*0.375)): 
     if mask_ok[int(h*0.375),int(w/2 + carpan)] == 255:
         #cv2.circle(mask_ok, (int(w/2 + carpan), int(h*0.375)), 1, wh, 1)
         sag_beyaz = sag_beyaz+1
 
-for carpan in range(1,int(w*0.375)): #soldaki beyaz noktaların sayısı
+for carpan in range(1,int(w*0.375)): 
     if mask_ok[int(h*0.375),int(w/2 - carpan)] == 255:
         #cv2.circle(mask_ok, (int(w/2 - carpan), int(h*0.375)), 1, wh, 1)
         sol_beyaz = sol_beyaz+1
@@ -223,7 +222,7 @@ print(park)
 if (200 <= orta_nokta_color[2] <= 255) and (orta_nokta_color[0]<30) :
     print("Bu bir kirmizi isiktir.")
     #dur()
-#elif park_bul>=0: #bir yazı varsa giriyor.
+#elif park_bul>=0: 
 elif A11>=0:
     print("A1 bulduuuuum")
 elif A22>=0:
@@ -232,8 +231,7 @@ elif B11>=0:
     print("B1 bulduuuuum")
 elif B22>=0:
     print("B2 bulduuuuum")
-#
-    #bulduğu yazıya göre park fonk çalıştırs..
+
 else: # 0<=orta_nokta_color[2]<=100
     if sag_beyaz - sol_beyaz > Hassasiyet:
         print("-----------saga don tabelası")
@@ -243,8 +241,7 @@ else: # 0<=orta_nokta_color[2]<=100
         print("-----------duz git tabelası")
 
         #sag_serit()
-    #eğer kırmızı kontur alanı referanstan küçükse girecek.add()
-    #yönü tespit edecek.
+
 cv2.imshow("img",frame)
 cv2.imshow("mask_ok", mask_ok)
 #cv2.imshow("mask", mask)
